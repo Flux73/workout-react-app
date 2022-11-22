@@ -1,0 +1,9 @@
+.form__row {
+  display: flex;
+  align-items: center;
+}
+.form__label {
+  flex: 0 0 50%;
+  font-size: 1.5rem;
+  font-weight: 600;
+}

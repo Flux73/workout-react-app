@@ -1,0 +1,25 @@
+.nav {
+  display: none;
+  width: 7rem;
+  height: 7rem;
+  background-color: var(--color-dark--1);
+  position: absolute;
+  z-index: 9999;
+  bottom: 2rem;
+  right: 2rem;
+  border-radius: 100%;
+  /* display: flex; */
+  align-items: center;
+  justify-content: center;
+}
+
+.nav img {
+  width: 70%;
+  height: auto;
+}
+
+@media screen and (max-width: 50em) {
+  .nav {
+    display: flex;
+  }
+}
