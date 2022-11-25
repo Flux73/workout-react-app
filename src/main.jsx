@@ -7,7 +7,9 @@ import "leaflet/dist/leaflet.css";
 import MapProvider from "./context/map-context";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <MapProvider>
-    <App />
-  </MapProvider>
+  <React.StrictMode>
+    <MapProvider>
+      <App />
+    </MapProvider>
+  </React.StrictMode>
 );

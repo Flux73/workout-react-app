@@ -10,8 +10,6 @@ import "./Sidebar.css";
 const Sidebar = (props) => {
   const ctx = useContext(mapContext);
 
-  console.log(ctx.workouts);
-
   return (
     <div
       className={`sidebar ${props.isClicked ? "siderbar__small_screen" : null}`}
@@ -21,13 +19,9 @@ const Sidebar = (props) => {
       <ul className="workouts">
         <WorkoutForm />
         {[...ctx.workouts].reverse().map((workout, i) => {
-          console.log(
-            workout?.cadenceVal && workout?.cadenceVal,
-            "df",
-            workout?.elevationVal && workout?.elevationVal
-          );
           return (
             <Workout
+              id={workout.id}
               key={i}
               type={workout.workoutType}
               icon={workout.workoutType === "running" ? "🏃‍♂️" : "🚴‍♀️"}

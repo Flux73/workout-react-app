@@ -1,7 +1,6 @@
 import Sidebar from "./components/sidebar/Sidebar";
 import NavBar from "./components/sidebar/NavBar";
 import Map from "./components/map/Map";
-import "./App.css";
 import { useState } from "react";
 
 const App = () => {

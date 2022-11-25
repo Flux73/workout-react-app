@@ -12,9 +12,19 @@ import {
 import { mapContext } from "../../context/map-context";
 import months from "../../global/months";
 import { useRef } from "react";
+import Markers from "./Markers";
 
 const mapStyles = {
   height: "100%",
+};
+
+const ChangeWorkoutView = ({ coords }) => {
+  const map = useMap();
+  useEffect(() => {
+    if (!coords.length > 0) return;
+    map.flyTo(coords, 13);
+  }, [coords]);
+  return null;
 };
 
 const ChangeMapView = ({ coords }) => {
@@ -37,12 +47,8 @@ const ClickHandler = () => {
       mapCTX.showForm();
     });
 
-    return () => map.removeEventListener();
+    return () => map.removeEventListener("click");
   }, [map, mapCTX.workoutGetCoords]);
-  // const map = useMapEvent("click", (e) => {
-  //   mapCTX.workoutGetCoords(e.latlng);
-  //   mapCTX.showForm();
-  // });
 
   return null;
 };
@@ -50,20 +56,26 @@ const ClickHandler = () => {
 const Map = (props) => {
   const [coords, setCoords] = useState([51.505, -0.09]);
   const [isChanged, setIsChanged] = useState(false);
+  const [clickedWorkoutCoords, setClickedWorkoutCoords] = useState([]);
   const mapCTX = useContext(mapContext);
-  const popupRefs = [];
 
   useEffect(() => {
-    window.addEventListener("load", () => {
-      popupRefs.length > 0 && popupRefs.map((popup) => popup?.openPopup());
-    });
+    if (!mapCTX.clickedWorkoutCoords.length > 0) return;
+    setClickedWorkoutCoords(mapCTX.clickedWorkoutCoords);
+    // mapCTX.clear();
+  }, [mapCTX.clickedWorkoutCoords]);
 
-    return () => window.removeEventListener("load", () => {});
-  });
+  // useEffect(() => {
+  //   window.addEventListener("load", () => {
+  //     popupRefs.length > 0 && popupRefs.map((popup) => popup?.openPopup());
+  //   });
 
-  useEffect(() => {
-    [...popupRefs]?.pop()?.openPopup();
-  }, [mapCTX.workouts]);
+  //   return () => window.removeEventListener("load", () => {});
+  // });
+
+  // useEffect(() => {
+  //   [...popupRefs]?.pop()?.openPopup();
+  // }, [mapCTX.workouts]);
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
@@ -89,25 +101,11 @@ const Map = (props) => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {mapCTX.workouts.map((el, i) => (
-          <Marker
-            ref={(ref) => (popupRefs[i] = ref)}
-            key={i}
-            position={[el.coords.lat, el.coords.lng]}
-          >
-            <Popup
-              autoClose={false}
-              className={
-                el.workoutType === "running" ? "running-popup" : "cycling-popup"
-              }
-            >
-              {`${el.workoutType === "running" ? "🏃‍♂️" : "🚴‍♀️"} ${
-                el.description
-              }`}
-            </Popup>
-          </Marker>
-        ))}
+        <Markers workouts={mapCTX.workouts} />
         <ClickHandler />
+        {clickedWorkoutCoords.length > 0 && (
+          <ChangeWorkoutView coords={clickedWorkoutCoords} />
+        )}
         {isChanged && <ChangeMapView coords={coords} />}
       </MapContainer>
     </div>

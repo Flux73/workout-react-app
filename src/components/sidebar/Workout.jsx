@@ -1,12 +1,21 @@
 import React from "react";
 import "./Workout.css";
 import months from "../../global/months";
+import { mapContext } from "../../context/map-context";
+import { useContext } from "react";
 
 const Workout = (props) => {
+  const mapCTX = useContext(mapContext);
+
+  const getClickedWorkoutCoords = (e) => {
+    mapCTX.storeClickedWorkoutCoords(+e.currentTarget.dataset.id);
+  };
+
   return (
     <li
       className={`workout workout--${props.type}`}
-      // data-id="1234567890"
+      data-id={props.id}
+      onClick={getClickedWorkoutCoords}
     >
       <h2 className="workout__title">{props.description}</h2>
       <div className="workout__details">

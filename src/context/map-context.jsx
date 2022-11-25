@@ -4,17 +4,21 @@ import { useCallback } from "react";
 import { useState } from "react";
 import useLocalStorage from "../hooks/useLocalStorage";
 import months from "../global/months";
+import { useId } from "react";
 
-let ID_GEN = 1;
+// let ID_GEN = 0;
 
 export const mapContext = React.createContext({
   isFormShown: false,
   workouts: [],
   workoutCoords: [],
+  clickedWorkoutCoords: [],
   showForm: () => {},
   hideForm: () => {},
   addWorkout: () => {},
   workoutGetCoords: () => {},
+  storeClickedWorkoutCoords: () => {},
+  clear: () => {},
 });
 
 export default (props) => {
@@ -22,6 +26,7 @@ export default (props) => {
     isFormShown: false,
     workouts: [],
     workoutCoords: [],
+    clickedWorkoutCoords: [],
   });
 
   // Custom--Hook!!!
@@ -59,6 +64,7 @@ export default (props) => {
   );
 
   const addWorkout = (data) => {
+    const id = Math.random();
     const date = new Date();
     const description = `${data.workoutType[0].toUpperCase()}${data.workoutType.slice(
       1
@@ -72,7 +78,7 @@ export default (props) => {
       date: { month: date.getMonth(), day: date.getDate() },
       coords: { lat: map.workoutCoords[0], lng: map.workoutCoords[1] },
       description,
-      id: ID_GEN++,
+      id,
     };
 
     setMap((prev) => {
@@ -83,9 +89,35 @@ export default (props) => {
     });
   };
 
+  const storeClickedWorkoutCoords = (id) => {
+    const coords = map.workouts.find((workout) => workout.id === id).coords;
+
+    setMap((prev) => {
+      return {
+        ...prev,
+        clickedWorkoutCoords: [coords.lat, coords.lng],
+      };
+    });
+  };
+
+  const clear = () =>
+    setMap((prev) => {
+      return {
+        ...prev,
+        clickedWorkoutCoords: [],
+      };
+    });
   return (
     <mapContext.Provider
-      value={{ ...map, showForm, hideForm, addWorkout, workoutGetCoords }}
+      value={{
+        ...map,
+        showForm,
+        hideForm,
+        addWorkout,
+        workoutGetCoords,
+        storeClickedWorkoutCoords,
+        clear,
+      }}
     >
       {props.children}
     </mapContext.Provider>
