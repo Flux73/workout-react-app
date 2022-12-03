@@ -65,18 +65,6 @@ const Map = (props) => {
     // mapCTX.clear();
   }, [mapCTX.clickedWorkoutCoords]);
 
-  // useEffect(() => {
-  //   window.addEventListener("load", () => {
-  //     popupRefs.length > 0 && popupRefs.map((popup) => popup?.openPopup());
-  //   });
-
-  //   return () => window.removeEventListener("load", () => {});
-  // });
-
-  // useEffect(() => {
-  //   [...popupRefs]?.pop()?.openPopup();
-  // }, [mapCTX.workouts]);
-
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(
       (location) => {
@@ -98,8 +86,10 @@ const Map = (props) => {
         closePopupOnClick={false}
       >
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+          // attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png"
+          // url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <Markers workouts={mapCTX.workouts} />
         <ClickHandler />
